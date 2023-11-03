@@ -1,66 +1,23 @@
-import { Env } from './app/core';
-Env.loadEnvSettings();
+import dotenv from "dotenv"
+dotenv.config();
 
-import * as http from 'http';
-import * as debug from 'debug';
-import { App } from './app/app';
+import express,{Request,Response} from "express"
+import userRouter from "./api/routes/user.route";
+import connectDB from "./api/config/connectDb";
 
-const logger = debug('app:src/index.ts');
+const PORT = 5000 || process.env.PORT
 
-const app: App = new App();
-const port = normalizePort(process.env.PORT || 4000);
-app.setPort(port);
+const app = express();
+app.use(express.json());
 
-const server = http.createServer(app.app);
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+app.get("/",(req:Request,res:Response)=>{
+  res.json("Hello How are you")
+})
 
-// Normalize port
-function normalizePort(val: number | string): number {
-  const DEFAULT_PORT = 3000;
-  const portNumber: number = typeof val === 'string' ? parseInt(val, 10) : val;
-  if (isNaN(portNumber)) return DEFAULT_PORT;
-  return portNumber;
-}
+connectDB()
+app.use(userRouter)
 
-// Server error handling
-function onError(error: NodeJS.ErrnoException): void {
-  if (error.syscall !== 'listen') throw error;
-  const bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
-  switch (error.code) {
-    case 'EACCES':
-      logger(`${bind} requires elevated privileges`);
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      logger(`${bind} is already in use`);
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
-}
+app.listen(PORT,()=>{
+  console.log(`Server is running on Pot ${PORT}` )
+})
 
-// On server listening handler
-function onListening(): void {
-  const addr = server.address();
-  const bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr && addr.port}`;
-  logger(`App started and listening on ${bind}`);
-}
-
-process.on('SIGTERM', () => {
-  logger('Received SIGTERM, app closing...');
-  process.exit(0);
-});
-
-process.on('SIGINT', () => {
-  logger('Received SIGINT, app closing...');
-  process.exit(0);
-});
-
-process.on('unhandledRejection', reason => {
-  logger(`Unhandled promise rejection thrown: `);
-  logger(reason);
-  process.exit(1);
-});

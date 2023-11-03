@@ -33,6 +33,8 @@
   },
   "homepage": "https://github.com/jbutko/express-ts-api-boilerplate",
   "dependencies": {
+    "@prisma/client": "^5.5.2",
+    "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
     "debug": "^4.1.1",
     "dotenv": "^7.0.0",
@@ -40,9 +42,11 @@
     "express": "^4.17.0",
     "express-joi-validation": "^0.3.0",
     "helmet": "^3.16.0",
-    "joi": "^14.3.1"
+    "joi": "^14.3.1",
+    "mongoose": "^8.0.0"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.5",
     "@types/body-parser": "^1.17.0",
     "@types/compression": "0.0.36",
     "@types/debug": "^4.1.4",
