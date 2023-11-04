@@ -37,38 +37,43 @@ const addUser = async (req: Request, res: Response) => {
   }
 };
 
-// const loginUser = async (req: Request, res: Response) => {
-//   try {
-//     const { email, password } = req.body;
-//     const userFound = await UserModel.getUserByEmail(email);
+const loginUser =async (req:Request,res:Response)=>{
+try {
+  
+    const {email,password} = req.body;
 
-//     if (userFound.status !== 'SUCCESS') {
-//       return res.json({
-//         message: 'Invalid User',
-//       });
-//     }
+    const userFound = await UserModel.getUserByEmail(email);
+    if(userFound.status=="SUCCESS"){
+      return res.status(409).json({
+        message:"Invalid User"
+      })
+    }
+  
+    const storedPassword = userFound.data?.password;
 
-//     if (userFound.data && typeof userFound.data.password === 'string') {
-//       const isMatch = await bcrypt.compare(password, userFound.data.password);
+    if (typeof storedPassword !== 'string') {
+      return res.status(401).json({
+        message: "Password not found"
+      });
+    }
+  
+    const isMatch = await bcrypt.compare(password,storedPassword)
+  
+    if (isMatch) {
+      return res.status(200).json({
+        message: "Login Successful"
+      });
+    } else {
+      return res.status(401).json({
+        message: "Invalid Password"
+      });
+    }
+}catch (error) {
+  console.error(error);
+  return res.status(500).json({
+    message: 'SORRY: Something went wrong',
+  });
+}
+}
 
-//       if (isMatch) {
-//         const signedToken = await signToken(is)
-
-//         return res.json({ message: 'Login Successfully' });
-//       } else {
-//         return res.json({ message: 'OOPS! Something went wrong' });
-//       }
-//     } else {
-//       res.json({
-//         message: 'Invalid User',
-//       });
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({
-//       message: 'SORRY: Something went wrong',
-//     });
-//   }
-// };
-
-export { addUser };
+export { addUser, loginUser };
