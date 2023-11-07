@@ -1,17 +1,16 @@
-// const JWT = require("jsonwebtoken");
-// const JWT_SECRET = process.env.JWT_SECRET;
+import jwt from 'jsonwebtoken'
+import { sessionString } from '../interfaces/user.interface';
 
-// const signToken = async (user) => {
-//   const tokenData = {
-//     _id: user._id,
-//   };
+const JWT_SECRET = 'your_secret_key';
 
-//   const expiresIn = "7d"; 
+export const signToken = (user: sessionString): string => {
+  const tokenData = {
+    _id: user._id,
+    // session:user.session
+  };
 
-//   const signedToken = JWT.sign(tokenData, JWT_SECRET, { expiresIn });
-//   return signedToken;
-// };
+  const expiresIn = '7d';
 
-// module.exports = {
-//   signToken,
-// };
+  const signedToken = jwt.sign(tokenData, JWT_SECRET, { expiresIn });
+  return signedToken;
+};

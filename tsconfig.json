@@ -5,6 +5,7 @@
     "baseUrl": "./",
     "module": "commonjs",
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "esModuleInterop": true,
     "noLib": false,
     "outDir": "./build",

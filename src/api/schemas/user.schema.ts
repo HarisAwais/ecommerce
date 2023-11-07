@@ -1,12 +1,23 @@
-import * as mongoose from 'mongoose';
-import { User } from '../interfaces/user.interface';
+// user.model.ts
+import mongoose from 'mongoose';
+import { CartItem,UserDocument } from '../interfaces/user.interface';
 
-const user = new mongoose.Schema({
-    name:String,
-    email: String,
-    password: String,
-  });
+const CartItem = {
+  product: mongoose.Types.ObjectId,
+  quantity: Number
+}
+const userSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  password: String,
+  session: {
+    type: String,
+    default: null,
+  },
+  cart: [CartItem],
+});
 
-  const userSchema = mongoose.model<User & mongoose.Document>('User', user);
 
-  export default userSchema;
+const User = mongoose.model<UserDocument>('User', userSchema);
+
+export default User;

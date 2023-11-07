@@ -1,0 +1,436 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "ECOMMERCE-REST-API",
+    "description": "CRUD using TypeScript"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/",
+      "description": "Local Dev"
+    }
+  ],
+  "paths": {
+    "register": {
+      "post": {
+        "summary": "Register a new user",
+        "description": "Register a new user with the provided information.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["name", "email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully"
+          },
+          "400": {
+            "description": "Bad request, invalid user data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "login": {
+      "post": {
+        "summary": "User login",
+        "description": "Authenticate a user with their email and password.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User authenticated successfully"
+          },
+          "401": {
+            "description": "Unauthorized, invalid email or password"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "cart/{userId}": {
+      "post": {
+        "summary": "Add a product to the user's cart",
+        "description": "Add a product to the user's cart by providing the user's ID and product details.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "User's ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "product": {
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": "integer"
+                  }
+                },
+                "required": ["product", "quantity"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product added to the user's cart successfully"
+          },
+          "400": {
+            "description": "Bad request, invalid product data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "get-item/{userId}": {
+      "get": {
+        "summary": "Get Cart Items",
+        "description": "Getting cart item against each userId.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "User's ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product fetched successfully"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "remove-cart/{itemId}": {
+      "delete": {
+        "summary": "Remove Cart Items",
+        "description": "Remove cart product against particular user id.",
+        "parameters": [
+          {
+            "name": "itemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Item's ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string"
+                  }
+                },
+                "required": ["userId"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Product removed successfully"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/create-product": {
+      "post": {
+        "summary": "Create a new product",
+        "description": "Create a new product with the provided information.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "product_name": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "product_price": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "product_description": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "quantity": {
+                    "type": "number",
+                    "required": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Product created successfully"
+          },
+          "400": {
+            "description": "Bad request, invalid product data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/all-product": {
+      "get": {
+        "summary": "Get all products",
+        "description": "Retrieve all products.",
+        "responses": {
+          "200": {
+            "description": "Products retrieved successfully"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/delete-product/{productId}": {
+      "delete": {
+        "summary": "Delete a product",
+        "description": "Delete a product by providing the product ID.",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Product ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Product removed successfully"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/update-product/{productId}": {
+      "put": {
+        "summary": "Update a product",
+        "description": "Update a product by providing the product ID and updated data.",
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Product ID"
+          }
+        ]
+      },
+
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "product_name": {
+                  "type": "string"
+                },
+                "product_price": {
+                  "type": "string"
+                },
+                "product_description": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Product updated successfully"
+        },
+        "404": {
+          "description": "Product not found"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    },
+    "/order/create-order": {
+      "post": {
+        "summary": "Create a new order",
+        "description": "Create a new order with the provided information.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "productId": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "shippingAddress": {
+                    "type": "object",
+                    "properties": {
+                      "address": {
+                        "type": "string",
+                        "required": true
+                      },
+                      "city": {
+                        "type": "string",
+                        "required": true
+                      },
+                      "state": {
+                        "type": "string",
+                        "required": true
+                      },
+                      "postalCode": {
+                        "type": "string",
+                        "required": true
+                      },
+                      "country": {
+                        "type": "string",
+                        "required": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Order created successfully"
+          },
+          "400": {
+            "description": "Bad request, invalid order data"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/order/all-order/{userId}": {
+      "get": {
+        "summary": "Get all orders for a user",
+        "description": "Retrieve all orders for a user based on their user ID.",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "User's ID"
+          }
+        ]
+      },
+      "responses": {
+        "200": {
+          "description": "Orders retrieved successfully"
+        },
+        "404": {
+          "description": "No orders found for the user"
+        },
+        "500": {
+          "description": "Internal server error"
+        }
+      }
+    }
+  }
+}
